@@ -1,0 +1,29 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    restart: always
+    ports:
+      - "3306:3306" # Map MySQL internal port 3306 to 1214 on the host
+    environment:
+      MYSQL_ROOT_PASSWORD: 1214
+      MYSQL_DATABASE: golfclub_db
+      MYSQL_USER: Qap2
+      MYSQL_PASSWORD: 1214
+    volumes:
+      - mysql-data:/var/lib/mysql # Persist MySQL data
+
+  golfclub-api:
+    build:
+      context: .
+    container_name: golfclub-api-container
+    ports:
+      - "8080:8080" # Expose the Spring Boot app on port 8080
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/golfclub
+      SPRING_DATASOURCE_USERNAME: Qap2
+      SPRING_DATASOURCE_PASSWORD: 1214
+volumes:
+  mysql-data:
